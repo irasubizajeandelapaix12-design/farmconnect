@@ -1,0 +1,100 @@
+       *{
+            box-sizing: border-box;
+        }
+        body{
+            background-color: grey;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+        header{
+            background: linear-gradient(135deg, rgb(123, 118, 219), #1D9E75);
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+        .nav-bar{
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 15px;
+        }
+        button{
+            background-color: aqua;
+            color: black;
+            border: none;
+            border-radius: 12px;
+            min-width: 150px;
+            height: 42px;
+            padding: 0 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover{
+            background-color: rgb(8, 171, 106);
+            color: white;
+        }
+        main{
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+        .goat-card{
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.15);
+        }
+        .price{
+            color: #1D9E75;
+            font-size: 26px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .details-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 24px;
+        }
+        .detail-box{
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .detail-box h3{
+            color: rgb(123, 118, 219);
+            margin-top: 0;
+        }
+        ul{
+            padding-left: 20px;
+            line-height: 1.7;
+        }
+        footer{
+            background: black;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        footer a{
+            color: aqua;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        @media (max-width: 768px){
+            .goat-card{
+                grid-template-columns: 1fr;
+            }
+            .goat-image{
+                height: 240px;
+            }
+            button{
+                width: 100%;
+            }
+        }

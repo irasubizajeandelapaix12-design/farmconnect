@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriConnect — Farmer Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-50: #E1F5EE;
+      --green-100: #9FE1CB;
+      --green-400: #1D9E75;
+      --green-600: #0F6E56;
+      --green-800: #085041;
+      --coral: #D85A30;
+      --bg: #F4F6F3;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.1);
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --hint: #9ca3af;
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .page-wrapper {
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .form-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.75rem;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--green-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    .header-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .header-text p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .step {
+      flex: 1;
+      height: 4px;
+      border-radius: 4px;
+      background: #d1d5db;
+    }
+
+    .step.done { background: var(--green-100); }
+    .step.active { background: var(--green-400); }
+
+    /* ── Section cards ── */
+    .section {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--green-600);
+      background: var(--green-50);
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-bottom: 1.1rem;
+    }
+
+    /* ── Grid layouts ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+    .mt { margin-top: 12px; }
+
+    /* ── Fields ── */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .field label .req {
+      color: var(--coral);
+      margin-left: 2px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 9px 12px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      background: #fafafa;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.12);
+      background: #fff;
+    }
+
+    .field textarea {
+      resize: none;
+      height: 78px;
+      line-height: 1.55;
+    }
+
+    .field .hint {
+      font-size: 11px;
+      color: var(--hint);
+      line-height: 1.4;
+    }
+
+    /* ── Radio & Checkbox ── */
+    .radio-group {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .radio-item input[type="radio"] {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--green-400);
+      cursor: pointer;
+    }
+
+    .radio-item span {
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 8px;
+    }
+
+    .check-item input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--green-400);
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .check-item span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .check-item span a {
+      color: var(--green-400);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .check-item span a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 0.5px;
+      background: var(--border);
+      margin: 1.1rem 0;
+    }
+
+    /* ── Password field ── */
+    .pw-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .pw-wrap input {
+      padding-right: 48px;
+    }
+
+    .pw-toggle {
+      position: absolute;
+      right: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green-400);
+      cursor: pointer;
+      user-select: none;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .pw-toggle:hover { color: var(--green-600); }
+
+    /* ── Upload box ── */
+    .upload-box {
+      border: 1px dashed #c4cfc9;
+      border-radius: var(--radius);
+      background: #f8fbf9;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+    }
+
+    .upload-box:hover {
+      border-color: var(--green-400);
+      background: var(--green-50);
+    }
+
+    .upload-icon {
+      font-size: 22px;
+      color: var(--green-400);
+      margin-bottom: 6px;
+    }
+
+    .upload-box p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ── Submit button ── */
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--green-400);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.18s, transform 0.1s;
+      letter-spacing: 0.01em;
+    }
+
+    .submit-btn:hover { background: var(--green-600); }
+    .submit-btn:active { transform: scale(0.98); }
+
+    /* ── Login link ── */
+    .login-link {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 1rem;
+      padding-bottom: 2rem;
+    }
+
+    .login-link a {
+      color: var(--green-400);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-link a:hover { text-decoration: underline; }
+
+    /* ── Success overlay ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-overlay.visible { display: flex; }
+
+    .success-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--green-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .success-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--green-400);
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    .success-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .success-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .success-close {
+      margin-top: 1.5rem;
+      padding: 10px 28px;
+      background: var(--green-400);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <div class="form-header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 19.41L5.71 21 7 19c.5-.5 1-1 1.5-1.5C10 19 11.5 20 13 20c4-3 6-8 6-8s-1.5 0-2-.5S17 8 17 8z"/></svg>
+    </div>
+    <div class="header-text">
+      <h1>AgriConnect</h1>
+      <p>Farmer registration — create your account to access the marketplace</p>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-bar">
+    <div class="step done"></div>
+    <div class="step active"></div>
+    <div class="step"></div>
+    <div class="step"></div>
+  </div>
+
+  <!-- ── Section 1: Personal Information ── -->
+  <div class="section">
+    <span class="section-tag">Personal information</span>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>First name <span class="req">*</span></label>
+        <input type="text" id="first_name" placeholder="Jean" autocomplete="given-name"/>
+      </div>
+      <div class="field">
+        <label>Last name <span class="req">*</span></label>
+        <input type="text" id="last_name" placeholder="Habimana" autocomplete="family-name"/>
+      </div>
+      <div class="field">
+        <label>Date of birth <span class="req">*</span></label>
+        <input type="date" id="dob"/>
+      </div>
+      <div class="field">
+        <label>Gender <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="gender" value="male" checked/>
+            <span>Male</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="gender" value="female"/>
+            <span>Female</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="gender" value="other"/>
+            <span>Other</span>
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label>National ID (NID) <span class="req">*</span></label>
+        <input type="text" id="nid" placeholder="1 19XX XXXXXXXXXXX X" maxlength="20"/>
+      </div>
+      <div class="field">
+        <label>Phone number <span class="req">*</span></label>
+        <input type="tel" id="phone" placeholder="+250 7XX XXX XXX"/>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid-1">
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="email" placeholder="farmer@example.com" autocomplete="email"/>
+        <span class="hint">Optional — used for notifications and password recovery</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 2: Location ── -->
+  <div class="section">
+    <span class="section-tag">Location</span>
+
+    <div class="grid-3">
+      <div class="field">
+        <label>Province <span class="req">*</span></label>
+        <select id="province">
+          <option value="">Select</option>
+          <option>Northern</option>
+          <option>Southern</option>
+          <option>Eastern</option>
+          <option>Western</option>
+          <option>Kigali City</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>District <span class="req">*</span></label>
+        <select id="district">
+          <option value="">Select district</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sector <span class="req">*</span></label>
+        <select id="sector">
+          <option value="">Select sector</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2 mt">
+      <div class="field">
+        <label>Cell <span class="req">*</span></label>
+        <input type="text" id="cell" placeholder="Cell name"/>
+      </div>
+      <div class="field">
+        <label>Village <span class="req">*</span></label>
+        <input type="text" id="village" placeholder="Village name"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 3: Farm Details ── -->
+  <div class="section">
+    <span class="section-tag">Farm details</span>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Farm size (hectares) <span class="req">*</span></label>
+        <input type="number" id="farm_size" placeholder="e.g. 2.5" min="0" step="0.1"/>
+      </div>
+      <div class="field">
+        <label>Land ownership <span class="req">*</span></label>
+        <select id="land_ownership">
+          <option value="">Select</option>
+          <option>Owned</option>
+          <option>Leased</option>
+          <option>Cooperative</option>
+          <option>Family land</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Farming type <span class="req">*</span></label>
+        <select id="farming_type">
+          <option value="">Select</option>
+          <option>Crop farming</option>
+          <option>Livestock farming</option>
+          <option>Mixed farming</option>
+          <option>Aquaculture</option>
+          <option>Agro-forestry</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Years of experience</label>
+        <input type="number" id="experience" placeholder="e.g. 5" min="0"/>
+      </div>
+    </div>
+
+    <div class="grid-1 mt">
+      <div class="field">
+        <label>Main crops / livestock <span class="req">*</span></label>
+        <input type="text" id="crops" placeholder="e.g. Maize, beans, cassava, dairy cattle"/>
+      </div>
+    </div>
+
+    <div class="grid-1 mt">
+      <div class="field">
+        <label>Brief description of farming activities</label>
+        <textarea id="description" placeholder="Tell us about your farm, production scale, or specific needs…"></textarea>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>Upload farm photo or land certificate (optional)</label>
+      <div class="upload-box" onclick="document.getElementById('file_upload').click()">
+        <div class="upload-icon">&#8593;</div>
+        <p>Drag & drop or click to upload — JPG, PNG, PDF up to 5 MB</p>
+        <input type="file" id="file_upload" accept=".jpg,.jpeg,.png,.pdf" style="display:none"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 4: Account Credentials ── -->
+  <div class="section">
+    <span class="section-tag">Account credentials</span>
+
+    <div class="grid-1">
+      <div class="field">
+        <label>Username <span class="req">*</span></label>
+        <input type="text" id="username" placeholder="Choose a unique username" autocomplete="username"/>
+      </div>
+    </div>
+
+    <div class="grid-2 mt">
+      <div class="field">
+        <label>Password <span class="req">*</span></label>
+        <div class="pw-wrap">
+          <input type="password" id="password" placeholder="Min. 8 characters" autocomplete="new-password"/>
+          <button type="button" class="pw-toggle" onclick="togglePw('password', this)">Show</button>
+        </div>
+        <span class="hint">Use letters, numbers & a symbol (e.g. Farm2025!)</span>
+      </div>
+      <div class="field">
+        <label>Confirm password <span class="req">*</span></label>
+        <div class="pw-wrap">
+          <input type="password" id="confirm_password" placeholder="Repeat password" autocomplete="new-password"/>
+          <button type="button" class="pw-toggle" onclick="togglePw('confirm_password', this)">Show</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <label class="check-item">
+      <input type="checkbox" id="terms"/>
+      <span>I agree to the <a href="#">terms & conditions</a> and <a href="#">privacy policy</a> of AgriConnect.</span>
+    </label>
+    <label class="check-item">
+      <input type="checkbox" id="notifications"/>
+      <span>I consent to receive SMS/email notifications about market prices, agri-tips, and platform updates.</span>
+    </label>
+  </div>
+
+  <button class="submit-btn" onclick="handleSubmit()">Create my farmer account</button>
+
+  <p class="login-link">Already registered? <a href="#">Log in here</a></p>
+
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Registration successful!</h2>
+    <p>Your farmer account has been created. You can now log in to AgriConnect and access the marketplace.</p>
+    <button class="success-close" onclick="closeSuccess()">Go to login</button>
+  </div>
+</div>
+
+<script>
+  /* ── Password toggle ── */
+  function togglePw(id, btn) {
+    var inp = document.getElementById(id);
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      btn.textContent = 'Hide';
+    } else {
+      inp.type = 'password';
+      btn.textContent = 'Show';
+    }
+  }
+
+  /* ── Cascading district dropdown (sample data) ── */
+  var districts = {
+    'Northern': ['Burera', 'Gakenke', 'Gicumbi', 'Musanze', 'Rulindo'],
+    'Southern': ['Gisagara', 'Huye', 'Kamonyi', 'Muhanga', 'Nyamagabe', 'Nyanza', 'Nyaruguru', 'Ruhango'],
+    'Eastern':  ['Bugesera', 'Gatsibo', 'Kayonza', 'Kirehe', 'Ngoma', 'Nyagatare', 'Rwamagana'],
+    'Western':  ['Karongi', 'Ngororero', 'Nyabihu', 'Nyamasheke', 'Rubavu', 'Rusizi', 'Rutsiro'],
+    'Kigali City': ['Gasabo', 'Kicukiro', 'Nyarugenge']
+  };
+
+  document.getElementById('province').addEventListener('change', function() {
+    var distSel = document.getElementById('district');
+    var secSel  = document.getElementById('sector');
+    distSel.innerHTML = '<option value="">Select district</option>';
+    secSel.innerHTML  = '<option value="">Select sector</option>';
+    var list = districts[this.value] || [];
+    list.forEach(function(d) {
+      var opt = document.createElement('option');
+      opt.value = d; opt.textContent = d;
+      distSel.appendChild(opt);
+    });
+  });
+
+  /* ── Form submission ── */
+  function handleSubmit() {
+    var required = ['first_name','last_name','dob','nid','phone','province','district','cell','village','farm_size','land_ownership','farming_type','crops','username','password','confirm_password'];
+    var missing = required.filter(function(id) {
+      var el = document.getElementById(id);
+      return !el || !el.value.trim();
+    });
+    if (missing.length > 0) {
+      alert('Please fill in all required fields (marked with *).');
+      document.getElementById(missing[0]).focus();
+      return;
+    }
+    var pw  = document.getElementById('password').value;
+    var cpw = document.getElementById('confirm_password').value;
+    if (pw !== cpw) {
+      alert('Passwords do not match. Please check and try again.');
+      document.getElementById('confirm_password').focus();
+      return;
+    }
+    if (pw.length < 8) {
+      alert('Password must be at least 8 characters long.');
+      document.getElementById('password').focus();
+      return;
+    }
+    if (!document.getElementById('terms').checked) {
+      alert('Please accept the terms & conditions to continue.');
+      return;
+    }
+    document.getElementById('successOverlay').classList.add('visible');
+  }
+
+  function closeSuccess() {
+    document.getElementById('successOverlay').classList.remove('visible');
+  }
+</script>
+</body>
+</html>
